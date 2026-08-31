@@ -1,0 +1,33 @@
+# .github/workflows/deploy.yml  (in bloglide-source)
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Filter posts by visibility
+        run: node scripts/filter-by-visibility.mjs
+
+      - run: npm run build
+
+      - name: Deploy to site repo
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.SITE_DEPLOY_KEY }}
+          external_repository: ${{ vars.SITE_REPO }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'

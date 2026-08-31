@@ -1,0 +1,17 @@
+{
+  "blogId": "bloglide-prototype",
+  "site": {
+    "title": "Bloglide Prototype Blog",
+    "url": "https://jason-t-szabo.github.io",
+    "base": "/bloglide-site"
+  },
+  "features": {
+    "tags": false,
+    "rss": false,
+    "gatedPosts": false,
+    "comments": false
+  },
+  "backend": {
+    "apiBaseUrl": null
+  }
+}
