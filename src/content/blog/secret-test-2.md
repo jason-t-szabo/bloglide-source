@@ -1,5 +1,5 @@
 ---
-title: "Should Not Appear"
+title: "Should Not Appear 2"
 description: "Friends-tier canary."
 pubDate: 2026-08-30
 visibility: friends
