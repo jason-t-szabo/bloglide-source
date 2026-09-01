@@ -1,5 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { href } from '../../lib/paths';
+import { slugifyTag } from '../../lib/tags';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -8,6 +10,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const tags = post.data.tags.map((tag: string) => ({ display: tag, slug: slugifyTag(tag)}))
 ---
 
 <html lang="en">
@@ -20,5 +23,15 @@ const { Content } = await render(post);
     <article class="prose">
       <Content />
     </article>
+    {tags.map((tag) => (
+      <li>
+          <a
+              class="inline-block rounded bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
+              href={href(`tags/${tag.slug}/`)}
+          >
+              {tag.display}
+          </a>
+      </li>
+    ))}
   </body>
 </html>
