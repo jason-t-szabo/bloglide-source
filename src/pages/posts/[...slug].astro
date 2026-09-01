@@ -10,7 +10,9 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const tags = post.data.tags.map((tag: string) => ({ display: tag, slug: slugifyTag(tag)}))
+const tags = post.data.tags
+  .map((tag: string) => ({ display: tag, slug: slugifyTag(tag) }))
+  .filter((t: any) => t.slug);
 ---
 
 <html lang="en">
@@ -23,7 +25,7 @@ const tags = post.data.tags.map((tag: string) => ({ display: tag, slug: slugifyT
     <article class="prose">
       <Content />
     </article>
-    {tags.map((tag) => (
+    {tags.map((tag: any) => (
       <li>
           <a
               class="inline-block rounded bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
