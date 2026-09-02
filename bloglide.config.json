@@ -7,7 +7,7 @@
     "base": "/bloglide-site"
   },
   "features": {
-    "tags": true,
+    "topics": true,
     "rss": false,
     "gatedPosts": false,
     "comments": false

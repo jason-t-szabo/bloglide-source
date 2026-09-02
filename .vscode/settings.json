@@ -1,0 +1,7 @@
+{
+  "git.autofetch": "all",
+  "git.autofetchPeriod": 180,
+  "git.rebaseWhenSync": true,
+  "scm.showIncomingChanges": "always",
+  "scm.showOutgoingChanges": "always"
+}
