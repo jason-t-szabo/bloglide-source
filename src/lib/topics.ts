@@ -1,4 +1,4 @@
-// src/lib/tags.ts
+// src/lib/topics.ts
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 type Post = CollectionEntry<'blog'>;
@@ -10,11 +10,11 @@ const SLUG_OVERRIDES: Record<string, string> = {
   '.net': 'dotnet',
 };
 
-export function slugifyTag(tag: string): string {
-  const key = tag.trim().toLowerCase();
+export function slugifyTopic(topic: string): string {
+  const key = topic.trim().toLowerCase();
   if (key in SLUG_OVERRIDES) return SLUG_OVERRIDES[key];
 
-  return tag
+  return topic
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
@@ -23,41 +23,41 @@ export function slugifyTag(tag: string): string {
 }
 
 /** Variants differing only by case or whitespace are an intended merge. */
-function casefoldKey(tag: string): string {
-  return tag.trim().toLowerCase().replace(/\s+/g, ' ');
+function casefoldKey(topic: string): string {
+  return topic.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
 function warn(message: string): void {
   if (process.env.GITHUB_ACTIONS === 'true') {
-    console.log(`::warning title=Bloglide tags::${message}`);
+    console.log(`::warning title=Bloglide topics::${message}`);
   } else {
     console.warn(`[bloglide] ${message}`);
   }
 }
 
-export interface TagInfo {
+export interface TopicInfo {
   slug: string;
   display: string;
   variants: Map<string, number>;
   posts: Post[];
 }
 
-let cached: Map<string, TagInfo> | null = null;
+let cached: Map<string, TopicInfo> | null = null;
 
-export async function getTagRegistry(): Promise<Map<string, TagInfo>> {
+export async function getTopicRegistry(): Promise<Map<string, TopicInfo>> {
   if (cached) return cached;
 
   const posts = await getCollection('blog');
-  const registry = new Map<string, TagInfo>();
+  const registry = new Map<string, TopicInfo>();
 
   for (const post of posts) {
-    for (const raw of post.data.tags ?? []) {
+    for (const raw of post.data.topics ?? []) {
       const trimmed = raw.trim();
       if (!trimmed) continue;
 
-      const slug = slugifyTag(trimmed);
+      const slug = slugifyTopic(trimmed);
       if (!slug) {
-        warn(`Tag "${trimmed}" in ${post.id} slugs to an empty string; skipped. Add a SLUG_OVERRIDES entry.`);
+        warn(`Topic "${trimmed}" in ${post.id} slugs to an empty string; skipped. Add a SLUG_OVERRIDES entry.`);
         continue;
       }
 
@@ -80,7 +80,7 @@ export async function getTagRegistry(): Promise<Map<string, TagInfo>> {
     const concepts = new Set([...info.variants.keys()].map(casefoldKey));
     if (concepts.size > 1) {
       warn(
-        `Slug "${info.slug}" collides across distinct tags: ${[...concepts]
+        `Slug "${info.slug}" collides across distinct topics: ${[...concepts]
           .map((c) => `"${c}"`)
           .join(', ')}. Add SLUG_OVERRIDES entries to separate them.`
       );
@@ -93,8 +93,8 @@ export async function getTagRegistry(): Promise<Map<string, TagInfo>> {
   return registry;
 }
 
-export async function getSortedTags(): Promise<TagInfo[]> {
-  const registry = await getTagRegistry();
+export async function getSortedTopics(): Promise<TopicInfo[]> {
+  const registry = await getTopicRegistry();
   return [...registry.values()].sort(
     (a, b) => b.posts.length - a.posts.length || a.display.localeCompare(b.display)
   );

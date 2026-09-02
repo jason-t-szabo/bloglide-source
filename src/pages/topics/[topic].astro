@@ -1,22 +1,22 @@
 ---
-import { getTagRegistry, type TagInfo } from '../../lib/tags';
+import { getTopicRegistry, type TopicInfo } from '../../lib/topics';
 import { href } from '../../lib/paths';
 
 export async function getStaticPaths() {
-  const registry = await getTagRegistry();
+  const registry = await getTopicRegistry();
   return [...registry.values()].map((info) => ({
-    params: { tag: info.slug },
+    params: { topic: info.slug },
     props: { info },
   }));
 }
 
-const { info } = Astro.props as { info: TagInfo };
+const { info } = Astro.props as { info: TopicInfo };
 ---
 <html lang="en">
   <head><meta charset="utf-8" /><title>{info.display}</title></head>
   <body class="mx-auto max-w-2xl p-8 font-sans">
-    <p class="text-sm"><a class="text-blue-600 underline" href={href('tags/')}>All tags</a></p>
-    <h1 class="text-3xl font-bold mb-6">Tagged “{info.display}”</h1>
+    <p class="text-sm"><a class="text-blue-600 underline" href={href('topics/')}>All topics</a></p>
+    <h1 class="text-3xl font-bold mb-6">Topic “{info.display}”</h1>
     <ul class="space-y-3">
       {info.posts.map((post) => (
         <li>

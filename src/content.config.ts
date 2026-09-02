@@ -14,10 +14,14 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
-			draft: z.boolean().default(false),
-			tags: z.array(z.string()).default([]),
 			visibility: z.enum(['public', 'friends', 'private']).default('public'),
-		}),
+			draft: z.boolean().default(false),
+			topics: z.array(z.string()).default([]),
+			// Obsidian-native fields: accepted, never read by Bloglide.
+			tags: z.array(z.string()).optional(),
+			aliases: z.array(z.string()).optional(),
+			cssclasses: z.array(z.string()).optional(),
+		}).strict(),
 });
 
 export const collections = { blog };
