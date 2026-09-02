@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import { href } from '../../lib/paths';
 import { slugifyTopic } from '../../lib/topics';
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -22,6 +23,9 @@ const topics = post.data.topics
   </head>
   <body class="mx-auto max-w-2xl p-8 font-sans">
     <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
+    {post.data.heroImage && (
+      <Image src={post.data.heroImage} alt="" class="mb-6 rounded" />
+    )}
     <article class="prose">
       <Content />
     </article>
