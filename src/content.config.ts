@@ -1,21 +1,31 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { fromZonedTime } from 'date-fns-tz';
+import { readFileSync } from 'node:fs';
+
+const config = JSON.parse(readFileSync('../bloglide.config.json', 'utf8'));
+
+const wallClock = z.union([z.string(), z.date()]).transform((v) => {
+  // js-yaml parses naive timestamps as UTC; recover the author's wall clock.
+  const s = v instanceof Date ? v.toISOString().slice(0, 19) : v;
+  const naive = s.length === 10 ? `${s}T00:00:00` : s.slice(0, 19);
+  return fromZonedTime(naive, config.site.timezone);
+});
 
 const blog = defineCollection({
 	loader: glob({
-  		pattern: ['**/*.{md,mdx}', '!README.md', '!_*/**', '!**/_*.{md,mdx}'],
+  		pattern: ['**/*.{md,mdx}', '!README.md', '!**/_*/**', '!**/_*.{md,mdx}'],
   		base: './src/content/blog',
 	}),
 	schema: ({ image }) =>
 		z.object({
 			title: z.string(),
 			description: z.string(),
-			pubDate: z.coerce.date(),
-			updatedDate: z.coerce.date().optional(),
-			heroImage: z.optional(image()),
+			pubDate: wallClock,
+			updatedDate: wallClock.optional(),
+			heroImage: z.string().optional(),
 			visibility: z.enum(['public', 'friends', 'private']).default('public'),
-			draft: z.boolean().default(false),
 			topics: z.array(z.string()).default([]),
 			// Obsidian-native fields: accepted, never read by Bloglide.
 			tags: z.array(z.string()).optional(),

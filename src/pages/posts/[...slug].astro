@@ -14,6 +14,14 @@ const { Content } = await render(post);
 const topics = post.data.topics
   .map((topic: string) => ({ display: topic, slug: slugifyTopic(topic) }))
   .filter((t: any) => t.slug);
+
+const heroes = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/content/blog/**/*.{png,jpg,jpeg,gif,webp,svg}'
+);
+const heroLoader = post.data.heroImage
+  ? heroes[`/src/content/blog/${post.data.heroImage}`]
+  : undefined;
+const hero = heroLoader ? (await heroLoader()).default : null;
 ---
 
 <html lang="en">
@@ -23,9 +31,7 @@ const topics = post.data.topics
   </head>
   <body class="mx-auto max-w-2xl p-8 font-sans">
     <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
-    {post.data.heroImage && (
-      <Image src={post.data.heroImage} alt="" class="mb-6 rounded" />
-    )}
+    {hero && <Image src={hero} alt="" class="mb-6 rounded" />}
     <article class="prose">
       <Content />
     </article>

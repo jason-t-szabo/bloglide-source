@@ -15,10 +15,10 @@ for (const entry of entries) {
   const { data } = matter(fs.readFileSync(filePath, 'utf8'));
   const visibility = data.visibility ?? 'public';
 
-  if (visibility === 'public' && !data.draft) continue;
+  if (visibility === 'public') continue;
 
   fs.unlinkSync(filePath);
-  console.log(`Excluded (${visibility}${data.draft ? ', draft' : ''}): ${entry}`);
+  console.log(`Excluded (${visibility}): ${entry}`);
 }
 
 // When features.gatedPosts is enabled, this is where a second pass writes

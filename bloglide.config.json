@@ -4,7 +4,8 @@
   "site": {
     "title": "Bloglide Prototype Blog",
     "url": "https://jason-t-szabo.github.io",
-    "base": "/bloglide-site"
+    "base": "/bloglide-site",
+    "timezone": "America/Chicago"
   },
   "features": {
     "topics": true,
