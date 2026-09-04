@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import { href } from '../../lib/paths';
 import { slugifyTopic } from '../../lib/topics';
 import { Image } from 'astro:assets';
+import { warn } from '../../lib/warn';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -18,10 +19,15 @@ const topics = post.data.topics
 const heroes = import.meta.glob<{ default: ImageMetadata }>(
   '/src/content/blog/**/*.{png,jpg,jpeg,gif,webp,svg}'
 );
-const heroLoader = post.data.heroImage
-  ? heroes[`/src/content/blog/${post.data.heroImage}`]
+const heroKey = post.data.heroImage?.replace(/^\.?\//, '');
+const heroLoader = heroKey
+  ? heroes[`/src/content/blog/${heroKey}`]
   : undefined;
 const hero = heroLoader ? (await heroLoader()).default : null;
+
+if (post.data.heroImage && !heroLoader) {
+  warn(`heroImage not found: ${post.data.heroImage} (in ${post.id})`);
+}
 ---
 
 <html lang="en">

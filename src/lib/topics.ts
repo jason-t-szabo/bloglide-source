@@ -1,5 +1,6 @@
 // src/lib/topics.ts
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { warn } from './warn';
 
 type Post = CollectionEntry<'blog'>;
 
@@ -25,14 +26,6 @@ export function slugifyTopic(topic: string): string {
 /** Variants differing only by case or whitespace are an intended merge. */
 function casefoldKey(topic: string): string {
   return topic.trim().toLowerCase().replace(/\s+/g, ' ');
-}
-
-function warn(message: string): void {
-  if (process.env.GITHUB_ACTIONS === 'true') {
-    console.log(`::warning title=Bloglide topics::${message}`);
-  } else {
-    console.warn(`[bloglide] ${message}`);
-  }
 }
 
 export interface TopicInfo {
