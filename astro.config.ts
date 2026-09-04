@@ -1,18 +1,15 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import { readFileSync } from 'node:fs';
+import { bloglide } from './src/lib/config';
+import { unified } from '@astrojs/markdown-remark';
 import { remarkVaultPaths } from './plugins/remark-vault-paths.mjs';
-
-const config = JSON.parse(readFileSync('./bloglide.config.json', 'utf8'));
 
 // https://astro.build/config
 export default defineConfig({
-  site: config.site.url,
-  base: config.site.base,
-  markdown: {
-    remarkPlugins: [remarkVaultPaths],
-  },
+  site: bloglide.site.url,
+  base: bloglide.site.base,
+  markdown: { processor: unified({ remarkPlugins: [remarkVaultPaths] }) },
   vite: {
     plugins: [tailwindcss()]
   },

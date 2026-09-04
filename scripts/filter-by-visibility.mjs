@@ -2,9 +2,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { join } from 'node:path';
 
-const config = JSON.parse(fs.readFileSync('bloglide.config.json', 'utf8'));
-const postsDir = path.join(process.cwd(), 'src/content/blog');
+const projectRoot = join(import.meta.dirname, '..');
+const config = JSON.parse(fs.readFileSync(join(projectRoot, 'bloglide.config.json'), 'utf8'));
+const postsDir = join(projectRoot, 'src/content/blog');
 
 const entries = fs.readdirSync(postsDir, { recursive: true });
 
