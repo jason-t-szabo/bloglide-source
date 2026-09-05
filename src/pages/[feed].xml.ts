@@ -1,0 +1,30 @@
+// src/pages/[feed].xml.ts
+import rss from '@astrojs/rss';
+import { getCollection } from 'astro:content';
+import type { APIContext } from 'astro';
+import { bloglide } from '../lib/config';
+import { href } from '../lib/paths';
+
+export async function getStaticPaths() {
+  return bloglide.features.rss ? [{ params: { feed: 'rss' } }] : [];
+}
+
+export async function GET(context: APIContext) {
+  const posts = (await getCollection('blog'))
+    .filter((post) => post.data.visibility === 'public')
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return rss({
+    title: bloglide.site.title,
+    description: bloglide.site.description,
+    site: context.site!,
+    items: posts.map((post) => ({
+      title: post.data.title,
+      description: post.data.description,
+      pubDate: post.data.pubDate,
+      link: href(`posts/${post.id}/`),
+      categories: post.data.topics,
+    })),
+    customData: `<language>${bloglide.site.language}</language>`,
+  });
+}

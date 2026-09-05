@@ -4,6 +4,7 @@ import { href } from '../../lib/paths';
 import { slugifyTopic } from '../../lib/topics';
 import { Image } from 'astro:assets';
 import { warn } from '../../lib/warn';
+import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -29,29 +30,22 @@ if (post.data.heroImage && !heroLoader) {
   warn(`heroImage not found: ${post.data.heroImage} (in ${post.id})`);
 }
 ---
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>{post.data.title}</title>
-  </head>
-  <body class="mx-auto max-w-2xl p-8 font-sans">
-    <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
-    {hero && <Image src={hero} alt="" class="mb-6 rounded" />}
-    <article class="prose">
-      <Content />
-    </article>
-    <ul>
-      {topics.map((topic: any) => (
-        <li>
-            <a
-                class="inline-block rounded bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
-                href={href(`topics/${topic.slug}/`)}
-            >
-                {topic.display}
-            </a>
-        </li>
-      ))}
-    </ul>
-  </body>
-</html>
+<Base title={post.data.title}>
+  <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
+  {hero && <Image src={hero} alt="" class="mb-6 rounded" />}
+  <article class="prose">
+    <Content />
+  </article>
+  <ul>
+    {topics.map((topic: any) => (
+      <li>
+          <a
+              class="inline-block rounded bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
+              href={href(`topics/${topic.slug}/`)}
+          >
+              {topic.display}
+          </a>
+      </li>
+    ))}
+  </ul>
+</Base>

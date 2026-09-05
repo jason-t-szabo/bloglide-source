@@ -5,11 +5,13 @@
     "title": "Bloglide Prototype Blog",
     "url": "https://jason-t-szabo.github.io",
     "base": "/bloglide-site",
-    "timezone": "America/Chicago"
+    "timezone": "America/Chicago",
+    "description": "The Bloglide project, in progress, currently in the prototyping phase of development.",
+    "language": "en-us"
   },
   "features": {
     "topics": true,
-    "rss": false,
+    "rss": true,
     "gatedPosts": false,
     "comments": false
   },

@@ -1,6 +1,7 @@
 ---
 import { getTopicRegistry, type TopicInfo } from '../../lib/topics';
 import { href } from '../../lib/paths';
+import Base from '../../layouts/Base.astro';
 
 export async function getStaticPaths() {
   const registry = await getTopicRegistry();
@@ -12,19 +13,16 @@ export async function getStaticPaths() {
 
 const { info } = Astro.props as { info: TopicInfo };
 ---
-<html lang="en">
-  <head><meta charset="utf-8" /><title>{info.display}</title></head>
-  <body class="mx-auto max-w-2xl p-8 font-sans">
-    <p class="text-sm"><a class="text-blue-600 underline" href={href('topics/')}>All topics</a></p>
-    <h1 class="text-3xl font-bold mb-6">Topic “{info.display}”</h1>
-    <ul class="space-y-3">
-      {info.posts.map((post) => (
-        <li>
-          <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
-            {post.data.title}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </body>
-</html>
+<Base title={`Topic: ${info.display}`}>
+  <p class="text-sm"><a class="text-blue-600 underline" href={href('topics/')}>All topics</a></p>
+  <h1 class="text-3xl font-bold mb-6">Topic “{info.display}”</h1>
+  <ul class="space-y-3">
+    {info.posts.map((post) => (
+      <li>
+        <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
+          {post.data.title}
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

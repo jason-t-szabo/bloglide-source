@@ -1,31 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
 import { href } from '../lib/paths';
-import "../styles/global.css"
+import Base from '../layouts/Base.astro';
 
 const posts = (await getCollection('blog')).sort(
   (a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Bloglide</title>
-  </head>
-  <body class="mx-auto max-w-2xl p-8 font-sans">
-    <h1 class="text-3xl font-bold mb-6">Home</h1>
-    <p class="text-sm"><a class="text-blue-600 underline" href={href('topics/')}>All topics</a></p>
-    <h2>Posts</h2>
-    <ul class="space-y-3">
-      {posts.map((post: any) => (
-        <li>
-          <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
-            {post.data.title}
-          </a>
-          <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
-        </li>
-      ))}
-    </ul>
-  </body>
-</html>
+<Base title="Home Page">
+  <h1 class="text-3xl font-bold mb-6">Home</h1>
+  <p class="text-sm"><a class="text-blue-600 underline" href={href('topics/')}>All topics</a></p>
+  <h2>Posts</h2>
+  <ul class="space-y-3">
+    {posts.map((post: any) => (
+      <li>
+        <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
+          {post.data.title}
+        </a>
+        <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
+      </li>
+    ))}
+  </ul>
+</Base>
