@@ -26,5 +26,6 @@ export async function GET(context: APIContext) {
       categories: post.data.topics,
     })),
     customData: `<language>${bloglide.site.language}</language>`,
+    xmlns: { atom: 'http://www.w3.org/2005/Atom' },
   });
 }
