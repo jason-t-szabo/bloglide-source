@@ -25,7 +25,8 @@ export async function GET(context: APIContext) {
       link: href(`posts/${post.id}/`),
       categories: post.data.topics,
     })),
-    customData: `<language>${bloglide.site.language}</language>`,
-    xmlns: { atom: 'http://www.w3.org/2005/Atom' },
+    customData:
+      `<language>${bloglide.site.language}</language>` +
+      `<atom:link href="${new URL(href('rss.xml'), bloglide.site.url)}" rel="self" type="application/rss+xml"/>`,
   });
 }
