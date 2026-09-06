@@ -9,6 +9,7 @@ export interface BloglideConfig {
     url: string;
     base: string;
     timezone: string;
+    displayTimezone?: string;
     description: string;
     language: string;
   };

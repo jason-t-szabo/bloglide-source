@@ -16,6 +16,21 @@ jobs:
 
       - run: npm ci
 
+      - name: Apply post dates
+        run: node scripts/apply-dates.mjs
+
+      - name: Commit date manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add post-dates.json
+          if git diff --cached --quiet; then
+            echo "No date changes"
+          else
+            git commit -m "Update post date manifest"
+            git push
+          fi
+
       - name: Filter posts by visibility
         run: node scripts/filter-by-visibility.mjs
 

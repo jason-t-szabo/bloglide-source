@@ -6,6 +6,7 @@
     "url": "https://jason-t-szabo.github.io",
     "base": "/bloglide-site",
     "timezone": "America/Chicago",
+    "displayTimezone": "UTC",
     "description": "The Bloglide project, in progress, currently in the prototyping phase of development.",
     "language": "en-us"
   },

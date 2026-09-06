@@ -8,9 +8,10 @@ interface Props {
   title: string;
 }
 const { title } = Astro.props;
+const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
 ---
 <!doctype html>
-<html lang={bloglide.site.language}>
+<html lang={bloglide.site.language} data-tz={displayZone}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

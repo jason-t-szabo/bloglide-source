@@ -5,6 +5,8 @@ import { slugifyTopic } from '../../lib/topics';
 import { Image } from 'astro:assets';
 import { warn } from '../../lib/warn';
 import Base from '../../layouts/Base.astro';
+import { formatInTimeZone } from 'date-fns-tz';
+import { bloglide } from '../../lib/config';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -29,9 +31,46 @@ const hero = heroLoader ? (await heroLoader()).default : null;
 if (post.data.heroImage && !heroLoader) {
   warn(`heroImage not found: ${post.data.heroImage} (in ${post.id})`);
 }
+
+const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
+const pubDate = formatInTimeZone(post.data.pubDate, displayZone, "MMMM d, yyyy 'at' h:mm a zzz");
+const updatedDate = post.data.updatedDate && formatInTimeZone(post.data.updatedDate, displayZone, "MMMM d, yyyy 'at' h:mm a zzz")
 ---
 <Base title={post.data.title}>
   <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
+  <p class="text-gray-500">
+    Published: <a href={href(`posts/${post.id}/`)} class="underline">
+      <time class="local-time" datetime={post.data.pubDate.toISOString()}>{pubDate}</time>
+    </a>
+  </p>
+  {updatedDate && (
+    <p class="text-gray-500">
+      Updated: <a href={href(`posts/${post.id}/`)} class="underline">
+        <time class="local-time" datetime={post.data.updatedDate.toISOString()}>{updatedDate}</time>        
+      </a>
+    </p>
+  )}
+  <script is:inline>
+    (function () {
+      var siteZone = document.documentElement.dataset.tz;
+      var readerZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (siteZone === readerZone) return;
+
+      var els = document.querySelectorAll('time.local-time:not([data-localized])');
+      for (var i = 0; i < els.length; i++) {
+        var el = els[i];
+        el.textContent = new Intl.DateTimeFormat(undefined, {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          timeZoneName: 'short',
+        }).format(new Date(el.getAttribute('datetime')));
+        el.setAttribute('data-localized', '');
+      }
+    })();
+  </script>
   {hero && <Image src={hero} alt="" class="mb-6 rounded" />}
   <article class="prose">
     <Content />
