@@ -18,6 +18,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Sync with remote
+        run: git pull --rebase origin main
+
       - name: Apply post dates
         run: node scripts/apply-dates.mjs
 
@@ -30,7 +33,6 @@ jobs:
             echo "No date changes"
           else
             git commit -m "Update post date manifest"
-            git pull --rebase origin main
             git push
           fi
 
