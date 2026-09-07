@@ -4,16 +4,17 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { bloglide } from '../lib/config';
 import { href } from '../lib/paths';
+import { sortByPubDate } from '../lib/dates';
 
 export async function getStaticPaths() {
   return bloglide.features.rss ? [{ params: { feed: 'rss' } }] : [];
 }
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection('blog'))
-    .filter((post) => post.data.visibility === 'public')
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
+  const filteredPosts = (await getCollection('blog'))
+    .filter((post) => post.data.pubDate && post.data.visibility === 'public')
+  const posts = sortByPubDate(filteredPosts)
+  
   return rss({
     title: bloglide.site.title,
     description: bloglide.site.description,

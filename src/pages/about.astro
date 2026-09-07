@@ -1,0 +1,21 @@
+---
+// src/pages/about.astro
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const entry = await getEntry('pages', 'About');
+const Content = entry ? (await render(entry)).Content : null;
+---
+<Base title={entry?.data.title ?? 'About'}>
+  {Content ? (
+    <>
+      <h1 class="text-3xl font-bold mb-4">{entry!.data.title}</h1>
+      <article class="prose max-w-none"><Content /></article>
+    </>
+  ) : (
+    <>
+      <h1 class="text-3xl font-bold mb-4">About</h1>
+      <p>This blog hasn't added an about page yet.</p>
+    </>
+  )}
+</Base>

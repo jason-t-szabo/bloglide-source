@@ -2,23 +2,53 @@
 import { getCollection } from 'astro:content';
 import { href } from '../lib/paths';
 import Base from '../layouts/Base.astro';
+import { sortByPubDate } from '../lib/dates';
+import { formatInTimeZone } from 'date-fns-tz';
+import { bloglide } from '../lib/config';
 
-const posts = (await getCollection('blog')).sort(
-  (a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const posts = sortByPubDate(await getCollection('blog'));
+const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
 ---
 <Base title="Home Page">
-  <h1 class="text-3xl font-bold mb-6">Home</h1>
-  <p class="text-sm"><a class="text-blue-600 underline" href={href('topics/')}>All topics</a></p>
-  <h2>Posts</h2>
+  <h1 class="text-3xl font-bold mb-6">Posts</h1>
   <ul class="space-y-3">
-    {posts.map((post: any) => (
-      <li>
-        <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
-          {post.data.title}
-        </a>
-        <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
-      </li>
-    ))}
+    {posts.map((post: any) => {
+      const pubDate = post.data.pubDate && formatInTimeZone(post.data.pubDate, displayZone, 'yyyy-MM-dd HH:mm zzz');      
+      return (
+        <li>
+          <a href={href(`posts/${post.id}/`)} class="block bg-slate-200 py-2 px-4 rounded-md">
+            <div class="flex justify-between">
+              <span class="font-semibold">{post.data.title}</span>
+              <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
+            </div>
+            {pubDate && <time class="block local-time text-sm text-gray-500 mr-2 mt-1" datetime={post.data.pubDate.toISOString()}>{pubDate}</time>}
+            <div class="my-2">
+              {post.data.description}
+            </div>
+          </a>          
+        </li>
+      )
+    })}
+    <script is:inline>
+      (function () {
+        var siteZone = document.documentElement.dataset.tz;
+        var readerZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (siteZone === readerZone) return;
+
+        var els = document.querySelectorAll('time.local-time:not([data-localized])');
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i];
+          el.textContent = new Intl.DateTimeFormat(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZoneName: 'short',
+          }).format(new Date(el.getAttribute('datetime')));
+          el.setAttribute('data-localized', '');
+        }
+      })();
+    </script>
   </ul>
 </Base>

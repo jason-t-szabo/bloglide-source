@@ -1,6 +1,7 @@
 // src/lib/topics.ts
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { warn } from './warn';
+import { sortByPubDate } from './dates';
 
 type Post = CollectionEntry<'blog'>;
 
@@ -79,7 +80,7 @@ export async function getTopicRegistry(): Promise<Map<string, TopicInfo>> {
       );
     }
 
-    info.posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    info.posts = sortByPubDate(info.posts);
   }
 
   cached = registry;

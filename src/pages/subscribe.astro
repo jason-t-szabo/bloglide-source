@@ -1,0 +1,53 @@
+---
+// src/pages/subscribe.astro
+import Base from '../layouts/Base.astro';
+import { bloglide } from '../lib/config';
+import { href } from '../lib/paths';
+
+const feedUrl = new URL(href('rss.xml'), bloglide.site.url).toString();
+---
+<Base title="Subscribe">
+  <h1 class="text-3xl font-bold mb-4">Subscribe</h1>
+  <p class="mb-4">
+    New posts are published to a feed you can follow in a reader app,
+    so you get them without checking back or handing over an email address.
+  </p>
+  <p class="mb-2">Copy this address into your reader:</p>
+  <div class="mb-6 flex items-start gap-2">
+    <code id="feed-url"
+          class="flex-1 rounded bg-gray-100 p-3 text-sm break-all">{feedUrl}</code>
+    <button id="copy-feed" type="button" hidden
+            class="w-24 shrink-0 rounded border border-gray-300 px-3 py-3 text-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">
+      Copy
+    </button>
+  </div>
+  <p id="copy-status" role="status" class="sr-only"></p>
+  <p class="text-sm text-gray-600">
+    New to feed readers? <a class="underline"
+       href="https://aboutfeeds.com/">About Feeds</a> explains how they work
+    and suggests a few to try.
+  </p>
+</Base>
+
+<script>
+  const button = document.getElementById('copy-feed');
+  const code = document.getElementById('feed-url');
+  const status = document.getElementById('copy-status');
+
+  if (button && code && navigator.clipboard) {
+    button.hidden = false;
+
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(code.textContent?.trim() ?? '');
+        button.textContent = 'Copied';
+        if (status) status.textContent = 'Feed address copied to clipboard';
+        window.setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+      } catch {
+        if (status) {
+          status.textContent = 'Copy failed. Select the address and copy it manually.';
+        }
+      }
+    });
+  }
+</script>

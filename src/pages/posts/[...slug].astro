@@ -33,16 +33,16 @@ if (post.data.heroImage && !heroLoader) {
 }
 
 const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
-const pubDate = formatInTimeZone(post.data.pubDate, displayZone, "MMMM d, yyyy 'at' h:mm a zzz");
+const pubDate = post.data.pubDate && formatInTimeZone(post.data.pubDate, displayZone, "MMMM d, yyyy 'at' h:mm a zzz");
 const updatedDate = post.data.updatedDate && formatInTimeZone(post.data.updatedDate, displayZone, "MMMM d, yyyy 'at' h:mm a zzz")
 ---
 <Base title={post.data.title}>
   <h1 class="text-3xl font-bold mb-4">{post.data.title}</h1>
-  <p class="text-gray-500">
+  {pubDate && (<p class="text-gray-500">
     Published: <a href={href(`posts/${post.id}/`)} class="underline">
       <time class="local-time" datetime={post.data.pubDate.toISOString()}>{pubDate}</time>
     </a>
-  </p>
+  </p>)}
   {updatedDate && (
     <p class="text-gray-500">
       Updated: <a href={href(`posts/${post.id}/`)} class="underline">
@@ -72,7 +72,7 @@ const updatedDate = post.data.updatedDate && formatInTimeZone(post.data.updatedD
     })();
   </script>
   {hero && <Image src={hero} alt="" class="mb-6 rounded" />}
-  <article class="prose">
+  <article class="prose max-w-none">
     <Content />
   </article>
   <ul>

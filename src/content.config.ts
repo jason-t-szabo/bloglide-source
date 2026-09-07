@@ -3,6 +3,7 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { fromZonedTime } from 'date-fns-tz';
 import { bloglide } from './lib/config';
+import { PAGE_FILES, PAGE_GLOB_EXCLUDES } from './lib/pages.mjs';
 
 const wallClock = z.union([z.string(), z.date()]).transform((v) => {
   // js-yaml parses naive timestamps as UTC; recover the author's wall clock.
@@ -13,7 +14,7 @@ const wallClock = z.union([z.string(), z.date()]).transform((v) => {
 
 const blog = defineCollection({
 	loader: glob({
-  		pattern: ['**/*.{md,mdx}', '!README.md', '!**/_*/**', '!**/_*.{md,mdx}'],
+  		pattern: [...PAGE_GLOB_EXCLUDES, '**/*.{md,mdx}', '!**/_*/**', '!**/_*.{md,mdx}'],
   		base: './src/content/blog',
 	}),
 	schema: ({ image }) =>
@@ -32,4 +33,15 @@ const blog = defineCollection({
 		}).strict(),
 });
 
-export const collections = { blog };
+const pages = defineCollection({
+  loader: glob({
+    pattern: PAGE_FILES,
+    base: './src/content/blog',
+  }),
+  schema: z.object({
+    title: z.string().default('About'),
+    updatedDate: z.coerce.date().optional(),
+  }).strict(),
+});
+
+export const collections = { blog, pages };
