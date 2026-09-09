@@ -2,6 +2,7 @@
 import { getTopicRegistry, type TopicInfo } from '../../lib/topics';
 import { href } from '../../lib/paths';
 import Base from '../../layouts/Base.astro';
+import { entryTitle } from '../../lib/titles';
 
 export async function getStaticPaths() {
   const registry = await getTopicRegistry();
@@ -19,7 +20,7 @@ const { info } = Astro.props as { info: TopicInfo };
     {info.posts.map((post) => (
       <li>
         <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
-          {post.data.title}
+          {entryTitle(post)}
         </a>
       </li>
     ))}

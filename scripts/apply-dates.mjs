@@ -4,7 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import matter from 'gray-matter';
 import { formatInTimeZone } from 'date-fns-tz';
-import { PAGE_FILES } from '../src/lib/pages.mjs';
+import { isPage } from '../src/lib/pages.mjs';
 
 const projectRoot = path.join(import.meta.dirname, '..');
 const postsDir = path.join(projectRoot, 'src/content/blog');
@@ -20,10 +20,6 @@ const manifest = fs.existsSync(manifestPath)
 const nowUtc = new Date().toISOString();
 const naive = (utc) => formatInTimeZone(new Date(utc), site.timezone, "yyyy-MM-dd'T'HH:mm:ss");
 const byHash = new Map(Object.entries(manifest).map(([k, v]) => [v.hash, v]));
-
-// Vault files that become fixed routes rather than posts. Their schema has
-// no pubDate, so only updatedDate is injected. Lowercase for matching.
-const isPage = (key) => PAGE_FILES.includes(key.toLowerCase());
 
 for (const entry of fs.readdirSync(postsDir, { recursive: true })) {
   if (!/\.mdx?$/i.test(entry)) continue;

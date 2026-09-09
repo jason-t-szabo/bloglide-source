@@ -3,52 +3,28 @@ import { getCollection } from 'astro:content';
 import { href } from '../lib/paths';
 import Base from '../layouts/Base.astro';
 import { sortByPubDate } from '../lib/dates';
-import { formatInTimeZone } from 'date-fns-tz';
 import { bloglide } from '../lib/config';
+import LocalTime from '../components/LocalTime.astro';
+import { entryTitle } from '../lib/titles';
 
 const posts = sortByPubDate(await getCollection('blog'));
-const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
 ---
-<Base title="Home Page">
+<Base title={bloglide.site.title}>
   <h1 class="text-3xl font-bold mb-6">Posts</h1>
   <ul class="space-y-3">
-    {posts.map((post: any) => {
-      const pubDate = post.data.pubDate && formatInTimeZone(post.data.pubDate, displayZone, 'yyyy-MM-dd HH:mm zzz');      
-      return (
-        <li>
-          <a href={href(`posts/${post.id}/`)} class="block bg-slate-200 py-2 px-4 rounded-md">
-            <div class="flex justify-between">
-              <span class="font-semibold">{post.data.title}</span>
+    {posts.map((post) => (
+      <li>
+        <a href={href(`posts/${post.id}/`)} class="block bg-slate-200 py-2 px-4 rounded-md">
+          <div class="flex justify-between">
+            <span class="font-semibold">{entryTitle(post)}</span>
+            {post.data.visibility !== 'public' && (
               <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
-            </div>
-            {pubDate && <time class="block local-time text-sm text-gray-500 mr-2 mt-1" datetime={post.data.pubDate.toISOString()}>{pubDate}</time>}
-            <div class="my-2">
-              {post.data.description}
-            </div>
-          </a>          
-        </li>
-      )
-    })}
-    <script is:inline>
-      (function () {
-        var siteZone = document.documentElement.dataset.tz;
-        var readerZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        if (siteZone === readerZone) return;
-
-        var els = document.querySelectorAll('time.local-time:not([data-localized])');
-        for (var i = 0; i < els.length; i++) {
-          var el = els[i];
-          el.textContent = new Intl.DateTimeFormat(undefined, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            timeZoneName: 'short',
-          }).format(new Date(el.getAttribute('datetime')));
-          el.setAttribute('data-localized', '');
-        }
-      })();
-    </script>
+            )}
+          </div>
+          {post.data.pubDate && <LocalTime date={post.data.pubDate} class="block text-sm text-gray-500 mr-2 my-1" />}
+          {post.data.description && <div class="my-2">{post.data.description}</div>}
+        </a>
+      </li>
+    ))}
   </ul>
 </Base>

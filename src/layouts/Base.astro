@@ -29,5 +29,26 @@ const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
   <body class="mx-auto max-w-2xl p-8 font-sans">
     <Header />
     <slot />
+    <script is:inline>
+      (function () {
+        var siteZone = document.documentElement.dataset.tz;
+        var readerZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (siteZone === readerZone) return;
+
+        var els = document.querySelectorAll('time.local-time:not([data-localized])');
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i];
+          el.textContent = new Intl.DateTimeFormat(undefined, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZoneName: 'short',
+          }).format(new Date(el.getAttribute('datetime')));
+          el.setAttribute('data-localized', '');
+        }
+      })();
+    </script>
   </body>
 </html>

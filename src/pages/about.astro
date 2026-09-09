@@ -1,15 +1,19 @@
 ---
 // src/pages/about.astro
-import { getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { entryTitle } from '../lib/titles';
 
-const entry = await getEntry('pages', 'About');
+const entry = (await getCollection('pages')).find(
+  (e) => e.id.toLowerCase() === 'about'
+);
 const Content = entry ? (await render(entry)).Content : null;
+const title = entry ? entryTitle(entry) : 'About'
 ---
-<Base title={entry?.data.title ?? 'About'}>
+<Base title={title}>
   {Content ? (
     <>
-      <h1 class="text-3xl font-bold mb-4">{entry!.data.title}</h1>
+      <h1 class="text-3xl font-bold mb-4">{title}</h1>
       <article class="prose max-w-none"><Content /></article>
     </>
   ) : (

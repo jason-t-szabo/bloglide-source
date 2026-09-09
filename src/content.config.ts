@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { fromZonedTime } from 'date-fns-tz';
 import { bloglide } from './lib/config';
-import { PAGE_FILES, PAGE_GLOB_EXCLUDES } from './lib/pages.mjs';
+import { PAGE_GLOBS, BLOG_GLOB_EXCLUDES } from './lib/pages.mjs';
 
 const wallClock = z.union([z.string(), z.date()]).transform((v) => {
   // js-yaml parses naive timestamps as UTC; recover the author's wall clock.
@@ -14,13 +14,13 @@ const wallClock = z.union([z.string(), z.date()]).transform((v) => {
 
 const blog = defineCollection({
 	loader: glob({
-  		pattern: [...PAGE_GLOB_EXCLUDES, '**/*.{md,mdx}', '!**/_*/**', '!**/_*.{md,mdx}'],
+  		pattern: ['**/*.{md,mdx}', '!**/_*/**', '!**/_*.{md,mdx}', ...BLOG_GLOB_EXCLUDES],
   		base: './src/content/blog',
 	}),
 	schema: ({ image }) =>
 		z.object({
-			title: z.string(),
-			description: z.string(),
+			title: z.string().optional(),
+			description: z.string().optional(),
 			pubDate: wallClock.optional(),
 			updatedDate: wallClock.optional(),
 			heroImage: z.string().optional(),
@@ -35,11 +35,11 @@ const blog = defineCollection({
 
 const pages = defineCollection({
   loader: glob({
-    pattern: PAGE_FILES,
+    pattern: PAGE_GLOBS,
     base: './src/content/blog',
   }),
   schema: z.object({
-    title: z.string().default('About'),
+    title: z.string().optional(),
     updatedDate: z.coerce.date().optional(),
   }).strict(),
 });

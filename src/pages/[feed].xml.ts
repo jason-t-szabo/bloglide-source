@@ -5,6 +5,7 @@ import type { APIContext } from 'astro';
 import { bloglide } from '../lib/config';
 import { href } from '../lib/paths';
 import { sortByPubDate } from '../lib/dates';
+import { entryTitle } from '../lib/titles';
 
 export async function getStaticPaths() {
   return bloglide.features.rss ? [{ params: { feed: 'rss' } }] : [];
@@ -19,13 +20,16 @@ export async function GET(context: APIContext) {
     title: bloglide.site.title,
     description: bloglide.site.description,
     site: context.site!,
-    items: posts.map((post) => ({
-      title: post.data.title,
-      description: post.data.description,
-      pubDate: post.data.pubDate,
-      link: href(`posts/${post.id}/`),
-      categories: post.data.topics,
-    })),
+    items: posts.map((post) => {
+      const title = entryTitle(post);
+      return {
+        title,
+        description: post.data.description ?? title,
+        pubDate: post.data.pubDate,
+        link: href(`posts/${post.id}/`),
+        categories: post.data.topics,
+      }
+    }),
     customData:
       `<language>${bloglide.site.language}</language>` +
       `<atom:link href="${new URL(href('rss.xml'), bloglide.site.url)}" ` +
