@@ -23,16 +23,10 @@ const nowUtc = new Date().toISOString()
 const naive = (utc) =>
   formatInTimeZone(new Date(utc), site.timezone, "yyyy-MM-dd'T'HH:mm:ss")
 const byHash = new Map(Object.values(manifest).map((v) => [v.hash, v]))
-const seen = new Map()
 
 for (const entry of fs.readdirSync(postsDir, { recursive: true })) {
   if (!isPostFile(entry)) continue
   const key = entry.split(path.sep).join('/')
-  const slug = key.replace(/\.mdx?$/i, '').toLowerCase()
-  if (seen.has(slug)) {
-    fail(`"${key}" and "${seen.get(slug)}" both produce the URL /posts/${slug}/. Rename one.`)
-  }
-  seen.set(slug, key)
 
   const filePath = path.join(postsDir, entry)
   const raw = fs.readFileSync(filePath, 'utf8')
