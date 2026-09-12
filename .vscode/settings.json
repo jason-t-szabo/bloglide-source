@@ -4,5 +4,10 @@
   "git.rebaseWhenSync": true,
   "scm.showIncomingChanges": "always",
   "scm.showOutgoingChanges": "always",
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[astro]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true
 }

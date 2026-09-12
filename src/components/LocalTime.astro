@@ -1,11 +1,19 @@
 ---
 // src/components/LocalTime.astro
-import { formatInTimeZone } from 'date-fns-tz';
-import { bloglide } from '../lib/config';
+import { formatInTimeZone } from 'date-fns-tz'
+import { bloglide } from '../lib/config'
 
-interface Props { date: Date; class?: string; }
-const { date, class: className = '' } = Astro.props;
-const zone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
+interface Props {
+  date: Date
+  class?: string
+}
+const { date, class: className = '' } = Astro.props
+const zone = bloglide.site.displayTimezone ?? bloglide.site.timezone
 ---
-<time class={`local-time ${className}`} datetime={date.toISOString()}
-    >{formatInTimeZone(date, zone, 'yyyy-MM-dd HH:mm zzz')}</time>
+
+<time
+  class={`local-time ${className}`}
+  datetime={date.toISOString()}
+>
+  {formatInTimeZone(date, zone, 'yyyy-MM-dd HH:mm zzz')}
+</time>

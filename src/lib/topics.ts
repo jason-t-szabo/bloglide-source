@@ -1,68 +1,70 @@
 // src/lib/topics.ts
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { warn } from './warn';
-import { sortByPubDate } from './dates';
-import { bloglide } from './config';
+import { getCollection, type CollectionEntry } from 'astro:content'
+import { warn } from './warn'
+import { sortByPubDate } from './dates'
+import { bloglide } from './config'
 
-type Post = CollectionEntry<'blog'>;
+type Post = CollectionEntry<'blog'>
 
 const SLUG_OVERRIDES: Record<string, string> = {
   'c#': 'c-sharp',
   'c++': 'cpp',
   'f#': 'f-sharp',
   '.net': 'dotnet',
-};
+}
 
 export function slugifyTopic(topic: string): string {
-  const key = topic.trim().toLowerCase();
-  if (key in SLUG_OVERRIDES) return SLUG_OVERRIDES[key];
+  const key = topic.trim().toLowerCase()
+  if (key in SLUG_OVERRIDES) return SLUG_OVERRIDES[key]
 
   return topic
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/^-+|-+$/g, '')
 }
 
 /** Variants differing only by case or whitespace are an intended merge. */
 function casefoldKey(topic: string): string {
-  return topic.trim().toLowerCase().replace(/\s+/g, ' ');
+  return topic.trim().toLowerCase().replace(/\s+/g, ' ')
 }
 
 export interface TopicInfo {
-  slug: string;
-  display: string;
-  variants: Map<string, number>;
-  posts: Post[];
+  slug: string
+  display: string
+  variants: Map<string, number>
+  posts: Post[]
 }
 
-let cached: Map<string, TopicInfo> | null = null;
+let cached: Map<string, TopicInfo> | null = null
 
 export async function getTopicRegistry(): Promise<Map<string, TopicInfo>> {
-  if (cached) return cached;
+  if (cached) return cached
 
-  const posts = await getCollection('blog');
-  const registry = new Map<string, TopicInfo>();
+  const posts = await getCollection('blog')
+  const registry = new Map<string, TopicInfo>()
 
   for (const post of posts) {
     for (const raw of post.data.topics ?? []) {
-      const trimmed = raw.trim();
-      if (!trimmed) continue;
+      const trimmed = raw.trim()
+      if (!trimmed) continue
 
-      const slug = slugifyTopic(trimmed);
+      const slug = slugifyTopic(trimmed)
       if (!slug) {
-        warn(`Topic "${trimmed}" in ${post.id} slugs to an empty string; skipped. Add a SLUG_OVERRIDES entry.`);
-        continue;
+        warn(
+          `Topic "${trimmed}" in ${post.id} slugs to an empty string; skipped. Add a SLUG_OVERRIDES entry.`
+        )
+        continue
       }
 
-      let info = registry.get(slug);
+      let info = registry.get(slug)
       if (!info) {
-        info = { slug, display: trimmed, variants: new Map(), posts: [] };
-        registry.set(slug, info);
+        info = { slug, display: trimmed, variants: new Map(), posts: [] }
+        registry.set(slug, info)
       }
-      info.variants.set(trimmed, (info.variants.get(trimmed) ?? 0) + 1);
-      if (!info.posts.includes(post)) info.posts.push(post);
+      info.variants.set(trimmed, (info.variants.get(trimmed) ?? 0) + 1)
+      if (!info.posts.includes(post)) info.posts.push(post)
     }
   }
 
@@ -70,32 +72,34 @@ export async function getTopicRegistry(): Promise<Map<string, TopicInfo>> {
     // Most frequent wins; alphabetical tie-break keeps builds deterministic.
     info.display = [...info.variants.entries()].sort(
       (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
-    )[0][0];
+    )[0][0]
 
-    const concepts = new Set([...info.variants.keys()].map(casefoldKey));
+    const concepts = new Set([...info.variants.keys()].map(casefoldKey))
     if (concepts.size > 1) {
       warn(
         `Slug "${info.slug}" collides across distinct topics: ${[...concepts]
           .map((c) => `"${c}"`)
           .join(', ')}. Add SLUG_OVERRIDES entries to separate them.`
-      );
+      )
     }
 
-    info.posts = sortByPubDate(info.posts);
+    info.posts = sortByPubDate(info.posts)
   }
 
-  cached = registry;
-  return registry;
+  cached = registry
+  return registry
 }
 
 export async function getTopicsSorted(
   order: 'name' | 'popular'
 ): Promise<TopicInfo[]> {
-  const topics = [...(await getTopicRegistry()).values()];
+  const topics = [...(await getTopicRegistry()).values()]
   const byName = (a: TopicInfo, b: TopicInfo) =>
-    a.display.localeCompare(b.display, bloglide.site.language, { numeric: true });
+    a.display.localeCompare(b.display, bloglide.site.language, {
+      numeric: true,
+    })
 
-  return order === 'popular'
-    ? topics.sort((a, b) => b.posts.length - a.posts.length || byName(a, b))
-    : topics.sort(byName);
+  return order === 'popular' ?
+      topics.sort((a, b) => b.posts.length - a.posts.length || byName(a, b))
+    : topics.sort(byName)
 }

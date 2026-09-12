@@ -1,18 +1,19 @@
 ---
 // src/pages/about.astro
-import { getCollection, render } from 'astro:content';
-import Base from '../layouts/Base.astro';
-import { entryTitle } from '../lib/titles';
-import LocalTime from '../components/LocalTime.astro';
+import { getCollection, render } from 'astro:content'
+import Base from '../layouts/Base.astro'
+import { entryTitle } from '../lib/titles'
+import LocalTime from '../components/LocalTime.astro'
 
 const entry = (await getCollection('pages')).find(
   (e) => e.id.toLowerCase() === 'about'
-);
-const Content = entry ? (await render(entry)).Content : null;
+)
+const Content = entry ? (await render(entry)).Content : null
 const title = entry ? entryTitle(entry) : 'About'
 ---
+
 <Base title={title}>
-  {entry && Content ? (
+  {entry && Content ?
     <>
       <h1 class="text-3xl font-bold mb-4">{title}</h1>
       {entry.data.updatedDate && (
@@ -20,12 +21,13 @@ const title = entry ? entryTitle(entry) : 'About'
           Updated: <LocalTime date={entry.data.updatedDate} />
         </p>
       )}
-      <article class="prose max-w-none"><Content /></article>
+      <article class="prose max-w-none">
+        <Content />
+      </article>
     </>
-  ) : (
-    <>
+  : <>
       <h1 class="text-3xl font-bold mb-4">About</h1>
       <p>This blog hasn't added an about page yet.</p>
     </>
-  )}
+  }
 </Base>

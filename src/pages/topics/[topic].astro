@@ -1,20 +1,19 @@
 ---
-import { getTopicRegistry, type TopicInfo } from '../../lib/topics';
-import { href } from '../../lib/paths';
-import Base from '../../layouts/Base.astro';
-import { entryTitle } from '../../lib/titles';
-import PostList from '../../components/PostList.astro';
+import { getTopicRegistry, type TopicInfo } from '../../lib/topics'
+import Base from '../../layouts/Base.astro'
+import PostList from '../../components/PostList.astro'
 
 export async function getStaticPaths() {
-  const registry = await getTopicRegistry();
+  const registry = await getTopicRegistry()
   return [...registry.values()].map((info) => ({
     params: { topic: info.slug },
     props: { info },
-  }));
+  }))
 }
 
-const { info } = Astro.props as { info: TopicInfo };
+const { info } = Astro.props as { info: TopicInfo }
 ---
+
 <Base title={`Topic: ${info.display}`}>
   <h1 class="text-3xl font-bold mb-6">Topic “{info.display}”</h1>
   <PostList posts={info.posts} />

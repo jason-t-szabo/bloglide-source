@@ -1,18 +1,25 @@
 ---
-import { href } from '../lib/paths';
+import { href } from '../lib/paths'
 
 interface Props {
   topic: {
-    slug: string;
-    display: string;
-    posts?: unknown[];
-  };
+    slug: string
+    display: string
+    posts?: unknown[]
+  }
 }
 
-const { topic } = Astro.props;
+const { topic } = Astro.props
 ---
+
 <li>
-  <a href={href(`topics/${topic.slug}/`)}
-      class="inline-block rounded bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300 focus-visible:outline-2"
-  >{topic.display}{topic.posts?.length ? <span class="text-gray-700 ml-1">({topic.posts.length})</span> : null}</a>
+  <a
+    href={href(`topics/${topic.slug}/`)}
+    class="inline-block rounded bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300 focus-visible:outline-2"
+  >
+    {topic.display}
+    {topic.posts?.length ?
+      <span class="text-gray-700 ml-1">({topic.posts.length})</span>
+    : null}
+  </a>
 </li>

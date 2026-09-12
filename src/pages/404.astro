@@ -1,13 +1,21 @@
 ---
 // src/pages/404.astro
-import Base from '../layouts/Base.astro';
-import { href } from '../lib/paths';
+import Base from '../layouts/Base.astro'
+import { href } from '../lib/paths'
 ---
+
 <Base title="Page not found">
   <h1 class="text-3xl font-bold mb-4">Page not found</h1>
   <p class="mb-4">
-    That address doesn't match anything on this site. It may have been moved,
-    or the link may have a typo.
+    That address doesn't match anything on this site. It may have been moved, or
+    the link may have a typo.
   </p>
-  <p><a class="underline" href={href('')}>Back to all posts</a></p>
+  <p>
+    <a
+      class="underline"
+      href={href('')}
+    >
+      Back to all posts
+    </a>
+  </p>
 </Base>

@@ -1,58 +1,75 @@
 ---
-import { getCollection, render } from 'astro:content';
-import { href } from '../../lib/paths';
-import { slugifyTopic } from '../../lib/topics';
-import { Image } from 'astro:assets';
-import { warn } from '../../lib/warn';
-import Base from '../../layouts/Base.astro';
-import LocalTime from '../../components/LocalTime.astro';
-import { entryTitle } from '../../lib/titles';
-import TopicChip from '../../components/TopicChip.astro';
+import { getCollection, render } from 'astro:content'
+import { href } from '../../lib/paths'
+import { slugifyTopic } from '../../lib/topics'
+import { Image } from 'astro:assets'
+import { warn } from '../../lib/warn'
+import Base from '../../layouts/Base.astro'
+import LocalTime from '../../components/LocalTime.astro'
+import { entryTitle } from '../../lib/titles'
+import TopicChip from '../../components/TopicChip.astro'
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+  const posts = await getCollection('blog')
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
 }
 
-const { post } = Astro.props;
-const { Content } = await render(post);
+const { post } = Astro.props
+const { Content } = await render(post)
 const topics = post.data.topics
   .map((topic: string) => ({ display: topic, slug: slugifyTopic(topic) }))
-  .filter((t: any) => t.slug);
+  .filter((t: any) => t.slug)
 
 const heroes = import.meta.glob<{ default: ImageMetadata }>(
   '/src/content/vault/**/*.{png,jpg,jpeg,gif,webp,svg}'
-);
-const heroKey = post.data.heroImage?.replace(/^\.?\//, '');
-const heroLoader = heroKey
-  ? heroes[`/src/content/vault/${heroKey}`]
-  : undefined;
-const hero = heroLoader ? (await heroLoader()).default : null;
+)
+const heroKey = post.data.heroImage?.replace(/^\.?\//, '')
+const heroLoader = heroKey ? heroes[`/src/content/vault/${heroKey}`] : undefined
+const hero = heroLoader ? (await heroLoader()).default : null
 
 if (post.data.heroImage && !heroLoader) {
-  warn(`heroImage not found: ${post.data.heroImage} (in ${post.id})`);
+  warn(`heroImage not found: ${post.data.heroImage} (in ${post.id})`)
 }
 if (hero && !post.data.heroImageAlt) {
-  warn(`heroImage has no heroImageAlt: ${post.data.heroImage} (in ${post.id})`);
+  warn(`heroImage has no heroImageAlt: ${post.data.heroImage} (in ${post.id})`)
 }
 
 const title = entryTitle(post)
 ---
+
 <Base title={title}>
   <h1 class="text-3xl font-bold mb-4">{title}</h1>
-  {post.data.pubDate && (<p class="text-gray-500">
-    Published: <a href={href(`posts/${post.id}/`)} class="hover:underline" aria-label="Permalink to this post">
-      <LocalTime date={post.data.pubDate} />
-    </a>
-  </p>)}
+  {post.data.pubDate && (
+    <p class="text-gray-500">
+      Published:{' '}
+      <a
+        href={href(`posts/${post.id}/`)}
+        class="hover:underline"
+        aria-label="Permalink to this post"
+      >
+        <LocalTime date={post.data.pubDate} />
+      </a>
+    </p>
+  )}
   {post.data.updatedDate && (
     <p class="text-gray-500">
-      Updated: <a href={href(`posts/${post.id}/`)} class="hover:underline" aria-label="Permalink to this post">
+      Updated:{' '}
+      <a
+        href={href(`posts/${post.id}/`)}
+        class="hover:underline"
+        aria-label="Permalink to this post"
+      >
         <LocalTime date={post.data.updatedDate} />
       </a>
     </p>
   )}
-  {hero && <Image src={hero} alt={post.data.heroImageAlt ?? ''} class="my-4 rounded" />}
+  {hero && (
+    <Image
+      src={hero}
+      alt={post.data.heroImageAlt ?? ''}
+      class="my-4 rounded"
+    />
+  )}
   <article class="prose max-w-none my-4">
     <Content />
   </article>

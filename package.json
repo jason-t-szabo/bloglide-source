@@ -26,12 +26,14 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@tailwindcss/typography": "^0.5.20",
     "@types/node": "^26.4.0",
     "gray-matter": "^4.0.3",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "^6.0.3",
     "unist-util-visit": "^5.1.0"
   }
 }

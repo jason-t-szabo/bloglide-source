@@ -1,8 +1,14 @@
 ---
-import Base from '../../layouts/Base.astro';
-import TopicList from '../../components/TopicList.astro';
-import { getTopicsSorted } from '../../lib/topics';
+import Base from '../../layouts/Base.astro'
+import TopicList from '../../components/TopicList.astro'
+import { getTopicsSorted } from '../../lib/topics'
 
-const topics = await getTopicsSorted('name');
+const topics = await getTopicsSorted('name')
 ---
-<Base title="All Topics"><TopicList topics={topics} order="name" /></Base>
+
+<Base title="All Topics">
+  <TopicList
+    topics={topics}
+    order="name"
+  />
+</Base>
