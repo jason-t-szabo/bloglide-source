@@ -4,6 +4,7 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import { join } from 'node:path'
 import { fail } from './report.mjs'
+import { isPostFile } from './paths.mjs'
 
 const projectRoot = join(import.meta.dirname, '..')
 const config = JSON.parse(
@@ -16,7 +17,7 @@ const entries = fs.readdirSync(postsDir, { recursive: true })
 const VISIBILITY = new Set(['public', 'friends', 'private'])
 
 for (const entry of entries) {
-  if (!/\.mdx?$/i.test(entry)) continue
+  if (!isPostFile(entry)) continue
 
   const filePath = path.join(postsDir, entry)
   const { data } = matter(fs.readFileSync(filePath, 'utf8'))

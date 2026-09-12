@@ -29,6 +29,9 @@ jobs:
 
       - run: npm run build
 
+      - name: Smoke test the build
+        run: node scripts/check-build.mjs
+
       - name: Commit date manifest
         run: |
           git config user.name "github-actions[bot]"

@@ -5,6 +5,7 @@ import crypto from 'node:crypto'
 import matter from 'gray-matter'
 import { formatInTimeZone } from 'date-fns-tz'
 import { isPage } from '../src/lib/pages.mjs'
+import { isPostFile } from './paths.mjs'
 
 const projectRoot = path.join(import.meta.dirname, '..')
 const postsDir = path.join(projectRoot, 'src/content/vault')
@@ -24,9 +25,13 @@ const naive = (utc) =>
 const byHash = new Map(Object.values(manifest).map((v) => [v.hash, v]))
 
 for (const entry of fs.readdirSync(postsDir, { recursive: true })) {
-  if (!/\.mdx?$/i.test(entry)) continue
+  if (!isPostFile(entry)) continue
   const key = entry.split(path.sep).join('/')
-  if (key.split('/').some((seg) => seg.startsWith('_'))) continue
+  const slug = key.replace(/\.mdx?$/i, '').toLowerCase()
+  if (seen.has(slug)) {
+    fail(`"${key}" and "${seen.get(slug)}" both produce the URL /posts/${slug}/. Rename one.`)
+  }
+  seen.set(slug, key)
 
   const filePath = path.join(postsDir, entry)
   const raw = fs.readFileSync(filePath, 'utf8')
