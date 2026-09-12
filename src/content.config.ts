@@ -40,7 +40,7 @@ const pages = defineCollection({
   }),
   schema: z.object({
     title: z.string().optional(),
-    updatedDate: z.coerce.date().optional(),
+    updatedDate: wallClock.optional(),
   }).strict(),
 });
 

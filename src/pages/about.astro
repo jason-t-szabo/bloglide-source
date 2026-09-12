@@ -3,12 +3,14 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { entryTitle } from '../lib/titles';
+import LocalTime from '../components/LocalTime.astro';
 
 const entry = (await getCollection('pages')).find(
   (e) => e.id.toLowerCase() === 'about'
 );
 const Content = entry ? (await render(entry)).Content : null;
 const title = entry ? entryTitle(entry) : 'About'
+console.log(entry)
 ---
 <Base title={title}>
   {Content ? (
