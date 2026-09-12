@@ -23,6 +23,7 @@ const nowUtc = new Date().toISOString()
 const naive = (utc) =>
   formatInTimeZone(new Date(utc), site.timezone, "yyyy-MM-dd'T'HH:mm:ss")
 const byHash = new Map(Object.values(manifest).map((v) => [v.hash, v]))
+const seen = new Map()
 
 for (const entry of fs.readdirSync(postsDir, { recursive: true })) {
   if (!isPostFile(entry)) continue
