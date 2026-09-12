@@ -15,7 +15,7 @@ const wallClock = z.union([z.string(), z.date()]).transform((v) => {
 const blog = defineCollection({
 	loader: glob({
   		pattern: ['**/*.{md,mdx}', '!**/_*/**', '!**/_*.{md,mdx}', ...BLOG_GLOB_EXCLUDES],
-  		base: './src/content/blog',
+  		base: './src/content/vault',
 	}),
 	schema: ({ image }) =>
 		z.object({
@@ -36,7 +36,7 @@ const blog = defineCollection({
 const pages = defineCollection({
   loader: glob({
     pattern: PAGE_GLOBS,
-    base: './src/content/blog',
+    base: './src/content/vault',
   }),
   schema: z.object({
     title: z.string().optional(),

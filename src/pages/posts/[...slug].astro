@@ -20,11 +20,11 @@ const topics = post.data.topics
   .filter((t: any) => t.slug);
 
 const heroes = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/content/blog/**/*.{png,jpg,jpeg,gif,webp,svg}'
+  '/src/content/vault/**/*.{png,jpg,jpeg,gif,webp,svg}'
 );
 const heroKey = post.data.heroImage?.replace(/^\.?\//, '');
 const heroLoader = heroKey
-  ? heroes[`/src/content/blog/${heroKey}`]
+  ? heroes[`/src/content/vault/${heroKey}`]
   : undefined;
 const hero = heroLoader ? (await heroLoader()).default : null;
 
@@ -52,7 +52,9 @@ const title = entryTitle(post)
   <article class="prose max-w-none">
     <Content />
   </article>
-  <ul>
+  <hr />
+  <h1 class="text-2xl font-semibold my-3">Topics</h1>
+  <ul class="flex flex-wrap gap-2">
     {topics.map((topic: any) => (
       <li>
           <a

@@ -2,7 +2,7 @@
 import path from 'node:path';
 import { visit } from 'unist-util-visit';
 
-const CONTENT_ROOT = path.resolve('./src/content/blog');
+const CONTENT_ROOT = path.resolve('./src/content/vault');
 
 export function remarkVaultPaths() {
   return (tree, file) => {

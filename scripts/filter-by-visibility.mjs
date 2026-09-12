@@ -6,7 +6,7 @@ import { join } from 'node:path';
 
 const projectRoot = join(import.meta.dirname, '..');
 const config = JSON.parse(fs.readFileSync(join(projectRoot, 'bloglide.config.json'), 'utf8'));
-const postsDir = join(projectRoot, 'src/content/blog');
+const postsDir = join(projectRoot, 'src/content/vault');
 
 const entries = fs.readdirSync(postsDir, { recursive: true });
 

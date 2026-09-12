@@ -10,12 +10,16 @@ const entry = (await getCollection('pages')).find(
 );
 const Content = entry ? (await render(entry)).Content : null;
 const title = entry ? entryTitle(entry) : 'About'
-console.log(entry)
 ---
 <Base title={title}>
-  {Content ? (
+  {entry && Content ? (
     <>
       <h1 class="text-3xl font-bold mb-4">{title}</h1>
+      {entry.data.updatedDate && (
+        <p class="text-gray-500 mb-4">
+          Updated: <LocalTime date={entry.data.updatedDate} />
+        </p>
+      )}
       <article class="prose max-w-none"><Content /></article>
     </>
   ) : (

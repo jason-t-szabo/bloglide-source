@@ -7,7 +7,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { isPage } from '../src/lib/pages.mjs';
 
 const projectRoot = path.join(import.meta.dirname, '..');
-const postsDir = path.join(projectRoot, 'src/content/blog');
+const postsDir = path.join(projectRoot, 'src/content/vault');
 const manifestPath = path.join(projectRoot, 'post-dates.json');
 const { site } = JSON.parse(
   fs.readFileSync(path.join(projectRoot, 'bloglide.config.json'), 'utf8')
