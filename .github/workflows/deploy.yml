@@ -24,6 +24,11 @@ jobs:
       - name: Apply post dates
         run: node scripts/apply-dates.mjs
 
+      - name: Filter posts by visibility
+        run: node scripts/filter-by-visibility.mjs
+
+      - run: npm run build
+
       - name: Commit date manifest
         run: |
           git config user.name "github-actions[bot]"
@@ -35,11 +40,6 @@ jobs:
             git commit -m "Update post date manifest"
             git push
           fi
-
-      - name: Filter posts by visibility
-        run: node scripts/filter-by-visibility.mjs
-
-      - run: npm run build
 
       - name: Deploy to site repo
         uses: peaceiris/actions-gh-pages@v4

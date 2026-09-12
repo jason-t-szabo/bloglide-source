@@ -1,0 +1,1 @@
+This file is intended to create a duplicate post slug, for testing purposes.
