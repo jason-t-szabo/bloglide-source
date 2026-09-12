@@ -38,5 +38,10 @@
     "pubDate": "2026-09-12T14:16:32.659Z",
     "updatedDate": "2026-09-12T14:16:32.659Z",
     "hash": "6fc5fca146268a5d9e52e4967dae3f94ec07282fd8b7a230aaf2be08ea517e9d"
+  },
+  "empty-frontmatter-test.md": {
+    "pubDate": "2026-09-12T14:52:09.370Z",
+    "updatedDate": null,
+    "hash": "1874eb3158dfe7cb7115ca59c663ac314803106d453811dc2077b849b8dbbf90"
   }
 }
