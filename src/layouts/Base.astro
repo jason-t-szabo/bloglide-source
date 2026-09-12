@@ -9,6 +9,9 @@ interface Props {
   title: string;
 }
 const { title } = Astro.props;
+const fullTitle = title === bloglide.site.title
+  ? title
+  : `${title} • ${bloglide.site.title}`;
 const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
 ---
 <!doctype html>
@@ -16,7 +19,7 @@ const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{fullTitle}</title>
     {bloglide.features.rss && (
       <link
         rel="alternate"
@@ -28,7 +31,9 @@ const displayZone = bloglide.site.displayTimezone ?? bloglide.site.timezone;
   </head>
   <body class="mx-auto max-w-2xl p-8 font-sans">
     <Header />
-    <slot />
+    <main>
+      <slot />
+    </main>    
     <script is:inline>
       (function () {
         var siteZone = document.documentElement.dataset.tz;

@@ -3,6 +3,7 @@ import { getTopicRegistry, type TopicInfo } from '../../lib/topics';
 import { href } from '../../lib/paths';
 import Base from '../../layouts/Base.astro';
 import { entryTitle } from '../../lib/titles';
+import PostList from '../../components/PostList.astro';
 
 export async function getStaticPaths() {
   const registry = await getTopicRegistry();
@@ -16,13 +17,5 @@ const { info } = Astro.props as { info: TopicInfo };
 ---
 <Base title={`Topic: ${info.display}`}>
   <h1 class="text-3xl font-bold mb-6">Topic “{info.display}”</h1>
-  <ul class="space-y-3">
-    {info.posts.map((post) => (
-      <li>
-        <a class="text-blue-600 underline" href={href(`posts/${post.id}/`)}>
-          {entryTitle(post)}
-        </a>
-      </li>
-    ))}
-  </ul>
+  <PostList posts={info.posts} />
 </Base>

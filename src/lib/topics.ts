@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { warn } from './warn';
 import { sortByPubDate } from './dates';
+import { bloglide } from './config';
 
 type Post = CollectionEntry<'blog'>;
 
@@ -87,9 +88,14 @@ export async function getTopicRegistry(): Promise<Map<string, TopicInfo>> {
   return registry;
 }
 
-export async function getSortedTopics(): Promise<TopicInfo[]> {
-  const registry = await getTopicRegistry();
-  return [...registry.values()].sort(
-    (a, b) => b.posts.length - a.posts.length || a.display.localeCompare(b.display)
-  );
+export async function getTopicsSorted(
+  order: 'name' | 'popular'
+): Promise<TopicInfo[]> {
+  const topics = [...(await getTopicRegistry()).values()];
+  const byName = (a: TopicInfo, b: TopicInfo) =>
+    a.display.localeCompare(b.display, bloglide.site.language, { numeric: true });
+
+  return order === 'popular'
+    ? topics.sort((a, b) => b.posts.length - a.posts.length || byName(a, b))
+    : topics.sort(byName);
 }

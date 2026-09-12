@@ -1,30 +1,17 @@
 ---
 import { getCollection } from 'astro:content';
-import { href } from '../lib/paths';
 import Base from '../layouts/Base.astro';
 import { sortByPubDate } from '../lib/dates';
 import { bloglide } from '../lib/config';
-import LocalTime from '../components/LocalTime.astro';
-import { entryTitle } from '../lib/titles';
+import PostList from '../components/PostList.astro';
 
 const posts = sortByPubDate(await getCollection('blog'));
 ---
 <Base title={bloglide.site.title}>
   <h1 class="text-3xl font-bold mb-6">Posts</h1>
-  <ul class="space-y-3">
-    {posts.map((post) => (
-      <li>
-        <a href={href(`posts/${post.id}/`)} class="block bg-slate-200 py-2 px-4 rounded-md">
-          <div class="flex justify-between">
-            <span class="font-semibold">{entryTitle(post)}</span>
-            {post.data.visibility !== 'public' && (
-              <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
-            )}
-          </div>
-          {post.data.pubDate && <LocalTime date={post.data.pubDate} class="block text-sm text-gray-500 mr-2 my-1" />}
-          {post.data.description && <div class="my-2">{post.data.description}</div>}
-        </a>
-      </li>
-    ))}
-  </ul>
+  {posts.length === 0 ? (
+    <p class="text-gray-500">No posts yet.</p>
+  ) : (
+    <PostList posts={posts} />
+  )}
 </Base>

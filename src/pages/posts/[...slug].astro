@@ -7,6 +7,7 @@ import { warn } from '../../lib/warn';
 import Base from '../../layouts/Base.astro';
 import LocalTime from '../../components/LocalTime.astro';
 import { entryTitle } from '../../lib/titles';
+import TopicChip from '../../components/TopicChip.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -48,22 +49,15 @@ const title = entryTitle(post)
       </a>
     </p>
   )}
-  {hero && <Image src={hero} alt="" class="mb-6 rounded" />}
-  <article class="prose max-w-none">
+  {hero && <Image src={hero} alt="" class="my-4 rounded" />}
+  <article class="prose max-w-none my-4">
     <Content />
   </article>
-  <hr />
-  <h1 class="text-2xl font-semibold my-3">Topics</h1>
+  <hr class="border-gray-300" />
+  <h2 class="text-2xl font-semibold my-3">Topics</h2>
   <ul class="flex flex-wrap gap-2">
-    {topics.map((topic: any) => (
-      <li>
-          <a
-              class="inline-block rounded bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
-              href={href(`topics/${topic.slug}/`)}
-          >
-              {topic.display}
-          </a>
-      </li>
+    {topics.map((topic) => (
+      <TopicChip topic={topic} />
     ))}
   </ul>
 </Base>

@@ -1,22 +1,8 @@
 ---
-import { getSortedTopics } from '../../lib/topics';
-import { href } from '../../lib/paths';
 import Base from '../../layouts/Base.astro';
-const topics = await getSortedTopics();
+import TopicList from '../../components/TopicList.astro';
+import { getTopicsSorted } from '../../lib/topics';
+
+const topics = await getTopicsSorted('name');
 ---
-<Base title="All Topics">
-  <h1 class="text-3xl font-bold mb-6">Topics</h1>
-  <ul class="flex flex-wrap gap-2">
-    {topics.map((topic) => (
-      <li>
-          <a
-              class="inline-block rounded bg-gray-100 px-3 py-1 text-sm hover:bg-gray-200"
-              href={href(`topics/${topic.slug}/`)}
-          >
-              {topic.display}
-              <span class="text-gray-500">({topic.posts.length})</span>
-          </a>
-      </li>
-    ))}
-  </ul>
-</Base>
+<Base title="All Topics"><TopicList topics={topics} order="name" /></Base>

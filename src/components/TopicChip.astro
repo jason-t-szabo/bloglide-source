@@ -1,0 +1,10 @@
+---
+import { href } from '../lib/paths';
+
+const { topic } = Astro.props;
+---
+<li>
+  <a href={href(`topics/${topic.slug}/`)}
+      class="inline-block rounded bg-slate-200 px-3 py-1 text-sm hover:bg-slate-300 focus-visible:outline-2"
+  >{topic.display}{topic.posts?.length && <span class="text-gray-500 ml-1">({topic.posts.length})</span>}</a>
+</li>
