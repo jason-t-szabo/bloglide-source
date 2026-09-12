@@ -29,6 +29,8 @@ for (const entry of entries) {
     fail(`Invalid visibility "${raw}" in ${entry}. Use public, friends, or private.`)
   }
 
+  if (visibility === 'public') continue
+
   fs.unlinkSync(filePath)
   console.log(`Excluded (${visibility}): ${entry}`)
 }
