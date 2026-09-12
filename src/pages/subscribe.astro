@@ -16,7 +16,7 @@ const feedUrl = new URL(href('rss.xml'), bloglide.site.url).toString();
   <div class="mb-6 flex items-start gap-2">
     <code id="feed-url"
           class="flex-1 rounded bg-gray-100 p-3 text-sm break-all">{feedUrl}</code>
-    <button id="copy-feed" type="button" hidden
+    <button id="copy-feed" type="button" hidden aria-label="Copy feed address"
             class="w-24 shrink-0 rounded border border-gray-300 px-3 py-3 text-sm hover:bg-gray-100 focus-visible:outline-2">
       Copy
     </button>

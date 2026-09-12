@@ -10,17 +10,18 @@ const { posts } = Astro.props;
 ---
 <ul class="space-y-6">
     {posts.map((post) => (
-      <li>
-        <a href={href(`posts/${post.id}/`)} class="block bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-md">
-          <div class="flex justify-between">
-            <span class="font-semibold">{entryTitle(post)}</span>
-            {post.data.visibility !== 'public' && (
-              <span class="text-sm text-gray-500 ml-2">{post.data.visibility}</span>
-            )}
-          </div>
-          {post.data.pubDate && <LocalTime date={post.data.pubDate} class="block text-sm text-gray-500 mr-2 my-1" />}
+      <li class="relative bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded-md">
+        <div class="flex justify-between">
+          <a href={href(`posts/${post.id}/`)}
+            class="font-semibold before:absolute before:inset-0 focus-visible:outline-2">
+            {entryTitle(post)}
+          </a>
+          {post.data.visibility !== 'public' && (
+            <span class="text-sm text-gray-700 ml-2">{post.data.visibility}</span>
+          )}
+        </div>
+          {post.data.pubDate && <LocalTime date={post.data.pubDate} class="block text-sm text-gray-700 mr-2 my-1" />}
           {post.data.description && <div class="my-2">{post.data.description}</div>}
-        </a>
       </li>
     ))}
 </ul>

@@ -32,24 +32,27 @@ const hero = heroLoader ? (await heroLoader()).default : null;
 if (post.data.heroImage && !heroLoader) {
   warn(`heroImage not found: ${post.data.heroImage} (in ${post.id})`);
 }
+if (hero && !post.data.heroImageAlt) {
+  warn(`heroImage has no heroImageAlt: ${post.data.heroImage} (in ${post.id})`);
+}
 
 const title = entryTitle(post)
 ---
 <Base title={title}>
   <h1 class="text-3xl font-bold mb-4">{title}</h1>
   {post.data.pubDate && (<p class="text-gray-500">
-    Published: <a href={href(`posts/${post.id}/`)} class="hover:underline">
+    Published: <a href={href(`posts/${post.id}/`)} class="hover:underline" aria-label="Permalink to this post">
       <LocalTime date={post.data.pubDate} />
     </a>
   </p>)}
   {post.data.updatedDate && (
     <p class="text-gray-500">
-      Updated: <a href={href(`posts/${post.id}/`)} class="hover:underline">
+      Updated: <a href={href(`posts/${post.id}/`)} class="hover:underline" aria-label="Permalink to this post">
         <LocalTime date={post.data.updatedDate} />
       </a>
     </p>
   )}
-  {hero && <Image src={hero} alt="" class="my-4 rounded" />}
+  {hero && <Image src={hero} alt={post.data.heroImageAlt ?? ''} class="my-4 rounded" />}
   <article class="prose max-w-none my-4">
     <Content />
   </article>

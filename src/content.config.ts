@@ -24,6 +24,7 @@ const blog = defineCollection({
 			pubDate: wallClock.optional(),
 			updatedDate: wallClock.optional(),
 			heroImage: z.string().optional(),
+			heroImageAlt: z.string().optional(),
 			visibility: z.enum(['public', 'friends', 'private']).default('public'),
 			topics: z.array(z.string()).default([]),
 			// Obsidian-native fields: accepted, never read by Bloglide.

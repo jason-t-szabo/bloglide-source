@@ -1,0 +1,15 @@
+{
+  "experimentalTernaries": true,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "quoteProps": "consistent",
+  "singleAttributePerLine": true,
+  "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": { "parser": "astro" }
+    }
+  ]
+}
