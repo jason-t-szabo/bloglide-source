@@ -1,1 +1,0 @@
-This is a sample About page, created for testing purposes.
