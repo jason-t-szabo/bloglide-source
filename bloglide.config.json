@@ -3,7 +3,7 @@
   "idSaltVersion": 1,
   "site": {
     "title": "Bloglide Prototype Blog",
-    "url": "https://jason-t-szabo.github.io",
+    "url": "https://x.io/blog",
     "base": "/bloglide-site",
     "timezone": "America/Chicago",
     "displayTimezone": "UTC",
@@ -12,7 +12,7 @@
   },
   "features": {
     "topics": true,
-    "rrs": true,
+    "rss": true,
     "gatedPosts": false,
     "comments": false
   },
