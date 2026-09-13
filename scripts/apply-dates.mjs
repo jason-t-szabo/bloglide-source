@@ -7,6 +7,7 @@ import { formatInTimeZone } from 'date-fns-tz'
 import { isPage } from '../src/lib/pages.mjs'
 import { isPostFile } from './paths.mjs'
 import { parseFrontmatter } from './report.mjs'
+import { fail } from './report.mjs'
 
 const projectRoot = path.join(import.meta.dirname, '..')
 const postsDir = path.join(projectRoot, 'src/content/vault')
