@@ -1,1 +1,0 @@
-Simulating a first post publication.
