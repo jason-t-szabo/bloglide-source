@@ -7,13 +7,12 @@
     "base": "/bloglide-site",
     "timezone": "America/Chicago",
     "displayTimezone": "UTC",
-    "badFlag": "evil",
     "description": "The Bloglide project, in progress, currently in the prototyping phase of development.",
     "language": "en-us"
   },
   "features": {
     "topics": true,
-    "rss": true,
+    "rrs": true,
     "gatedPosts": false,
     "comments": false
   },
