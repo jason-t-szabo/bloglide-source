@@ -21,11 +21,11 @@ jobs:
       - name: Sync with remote
         run: git pull --rebase origin main
 
-      - name: Filter posts by visibility
-        run: node scripts/filter-by-visibility.mjs
-
       - name: Apply post dates
         run: node scripts/apply-dates.mjs
+
+      - name: Filter posts by visibility
+        run: node scripts/filter-by-visibility.mjs
 
       - run: npm run build
 

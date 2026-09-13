@@ -6,6 +6,7 @@ import matter from 'gray-matter'
 import { formatInTimeZone } from 'date-fns-tz'
 import { isPage } from '../src/lib/pages.mjs'
 import { isPostFile } from './paths.mjs'
+import { parseFrontmatter } from './report.mjs'
 
 const projectRoot = path.join(import.meta.dirname, '..')
 const postsDir = path.join(projectRoot, 'src/content/vault')
@@ -35,7 +36,7 @@ for (const entry of fs.readdirSync(postsDir, { recursive: true })) {
   const filePath = path.join(postsDir, entry)
   const raw = fs.readFileSync(filePath, 'utf8')
   const hash = crypto.createHash('sha256').update(raw).digest('hex')
-  const { data, content } = matter(raw)
+  const { data, content } = parseFrontmatter(matter, raw, entry)
 
   const prior = manifest[key] ?? byHash.get(hash)
   let record =
