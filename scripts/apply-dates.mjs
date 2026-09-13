@@ -30,7 +30,11 @@ const naive = (utc) =>
   formatInTimeZone(new Date(utc), site.timezone, "yyyy-MM-dd'T'HH:mm:ss")
 const byHash = new Map(Object.values(manifest).map((v) => [v.hash, v]))
 
-for (const entry of fs.readdirSync(postsDir, { recursive: true })) {
+const entries = fs.existsSync(postsDir)
+  ? fs.readdirSync(postsDir, { recursive: true })
+  : []
+
+for (const entry of entries) {
   if (!isPostFile(entry)) continue
   const key = entry.split(path.sep).join('/')
 

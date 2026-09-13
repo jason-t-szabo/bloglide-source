@@ -12,7 +12,9 @@ const config = JSON.parse(
 )
 const postsDir = join(projectRoot, 'src/content/vault')
 
-const entries = fs.readdirSync(postsDir, { recursive: true })
+const entries = fs.existsSync(postsDir)
+  ? fs.readdirSync(postsDir, { recursive: true })
+  : []
 
 const VISIBILITY = new Set(['public', 'friends', 'private'])
 

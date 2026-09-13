@@ -33,9 +33,9 @@ const blog = defineCollection({
       visibility: z.enum(['public', 'friends', 'private']).default('public'),
       topics: z.array(z.string()).default([]),
       // Obsidian-native fields: accepted, never read by Bloglide.
-      tags: z.array(z.string()).optional(),
       aliases: z.array(z.string()).optional(),
       cssclasses: z.array(z.string()).optional(),
+      tags: z.array(z.string()).optional(),
     })
     .strict(),
 })
