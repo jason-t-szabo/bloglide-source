@@ -34,6 +34,7 @@ if (!fs.existsSync(buildManifestPath)) {
 let publicPosts
 try {
   ;({ publicPosts } = JSON.parse(fs.readFileSync(buildManifestPath, 'utf8')))
+  console.log(publicPosts)
 } catch (error) {
   fail(`.bloglide-build.json could not be read: ${error.message}`)
 }
