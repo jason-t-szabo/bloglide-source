@@ -70,7 +70,8 @@ for (const entry of entries) {
   if (touched) fs.writeFileSync(filePath, matter.stringify(content, data))
 }
 
-const GRACE_MS = 30 * 24 * 60 * 60 * 1000
+const GRACE_MS = 0
+// const GRACE_MS = 30 * 24 * 60 * 60 * 1000
 const cutoff = Date.now() - GRACE_MS
 let pruned = 0
 
