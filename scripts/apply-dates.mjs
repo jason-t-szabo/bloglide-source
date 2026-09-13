@@ -14,10 +14,14 @@ const { site } = JSON.parse(
   fs.readFileSync(path.join(projectRoot, 'bloglide.config.json'), 'utf8')
 )
 
-const manifest =
-  fs.existsSync(manifestPath) ?
-    JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : {}
+let manifest = {}
+if (fs.existsSync(manifestPath)) {
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+  } catch (error) {
+    fail(`post-dates.json is not valid JSON: ${error.message}`)
+  }
+}
 
 const nowUtc = new Date().toISOString()
 const naive = (utc) =>
