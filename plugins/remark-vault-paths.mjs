@@ -11,7 +11,7 @@ export function remarkVaultPaths() {
     const dir = path.dirname(file.path)
     visit(tree, 'image', (node) => {
       const url = decodeURI(node.url)
-      if (/^(https?:|\/|\.)/.test(url)) return
+      if (/^(https?:|data:|\/)/.test(url)) return
 
       const abs = path.join(CONTENT_ROOT, url)
       if (!fs.existsSync(abs)) {
@@ -29,7 +29,7 @@ export function remarkVaultPaths() {
       let rel = path.relative(dir, path.join(CONTENT_ROOT, url))
       if (!rel.startsWith('.')) rel = './' + rel
       node.url = rel.split(path.sep).join('/')
-      if (!node.alt) warn(`Missing alt text in file ${file.path} on image with URL ${node.url}.`)
+      if (!node.alt) warn(`Missing alt text in file ${file.path} on image with URL ${url}.`)
     })
   }
 }
