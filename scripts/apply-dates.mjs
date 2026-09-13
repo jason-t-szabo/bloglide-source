@@ -29,6 +29,7 @@ const nowUtc = new Date().toISOString()
 const naive = (utc) =>
   formatInTimeZone(new Date(utc), site.timezone, "yyyy-MM-dd'T'HH:mm:ss")
 const byHash = new Map(Object.values(manifest).map((v) => [v.hash, v]))
+const seenKeys = new Set()
 
 const entries = fs.existsSync(postsDir)
   ? fs.readdirSync(postsDir, { recursive: true })
@@ -37,6 +38,7 @@ const entries = fs.existsSync(postsDir)
 for (const entry of entries) {
   if (!isPostFile(entry)) continue
   const key = entry.split(path.sep).join('/')
+  seenKeys.add(key)
 
   const filePath = path.join(postsDir, entry)
   const raw = fs.readFileSync(filePath, 'utf8')
@@ -66,6 +68,26 @@ for (const entry of entries) {
     touched = true
   }
   if (touched) fs.writeFileSync(filePath, matter.stringify(content, data))
+}
+
+const GRACE_MS = 30 * 24 * 60 * 60 * 1000
+const cutoff = Date.now() - GRACE_MS
+let pruned = 0
+
+for (const key of Object.keys(manifest)) {
+  if (seenKeys.has(key)) continue
+
+  const last = manifest[key].updatedDate ?? manifest[key].pubDate
+  if (Date.parse(last) < cutoff) {
+    delete manifest[key]
+    pruned++
+  }
+}
+
+if (pruned > 0) {
+  console.log(
+    `Pruned ${pruned} date entr${pruned === 1 ? 'y' : 'ies'} for posts removed more than 30 days ago.`
+  )
 }
 
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n')
