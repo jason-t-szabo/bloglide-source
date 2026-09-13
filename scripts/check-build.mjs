@@ -1,8 +1,9 @@
 // scripts/check-build.mjs
 //
 // Post-build sanity check. Astro can exit 0 while emitting a site that is
-// missing pages — a content collection error, a slug collision, a bad glob.
-// Expected counts come from .bloglide-build.json, written by
+// missing pages — a slug collision, a schema failure, a bad glob.
+//
+// Expected posts come from .bloglide-build.json, written by
 // filter-by-visibility.mjs BEFORE it deletes anything. Walking the vault here
 // instead would only confirm that the pipeline agreed with itself: a filter
 // that removed every post would leave zero files producing zero pages, and
@@ -10,6 +11,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fail, warn } from './report.mjs'
+import { slugifyPath } from './slug.mjs'
 import { isPage, IGNORED_FILES } from '../src/lib/pages.mjs'
 
 const projectRoot = path.join(import.meta.dirname, '..')
@@ -53,19 +55,35 @@ const postPages = distFiles.filter(
     /(^|\/)posts\/.+\/index\.html$/.test(p) || /(^|\/)posts\/.+\.html$/.test(p)
 )
 
+// Recover the slug each built page corresponds to, so a missing page can be
+// named rather than merely counted.
+const builtSlugs = new Set(
+  postPages.map((p) =>
+    p.replace(/^.*?posts\//, '').replace(/\/?index\.html$|\.html$/, '')
+  )
+)
+
 const problems = []
 
-if (postPages.length < expected.length) {
-  problems.push(
-    `Expected ${expected.length} post page${expected.length === 1 ? '' : 's'} ` +
-      `but dist contains ${postPages.length}.\n` +
-      `  Public posts after filtering:\n${expected.map((f) => `    - ${f}`).join('\n')}\n` +
-      `  Pages built:\n${
-        postPages.length ?
-          postPages.map((f) => `    - ${f}`).join('\n')
-        : '    (none)'
-      }`
-  )
+// Group source files by the URL they would produce. More than one file in a
+// group means a collision: Astro's loader keeps only the last one.
+const bySlug = new Map()
+for (const key of expected) {
+  const slug = slugifyPath(key)
+  if (!bySlug.has(slug)) bySlug.set(slug, [])
+  bySlug.get(slug).push(key)
+}
+
+for (const [slug, files] of bySlug) {
+  if (files.length > 1) {
+    problems.push(
+      `These files all produce the URL /posts/${slug}/, so only one was built:\n` +
+        files.map((f) => `      ${f}`).join('\n') +
+        `\n    Rename all but one.`
+    )
+  } else if (!builtSlugs.has(slug)) {
+    problems.push(`"${files[0]}" did not produce a page at /posts/${slug}/.`)
+  }
 }
 
 if (!distFiles.includes('index.html')) {

@@ -1,12 +1,14 @@
 // scripts/report.mjs
 const inCI = process.env.GITHUB_ACTIONS === 'true'
 
+const encode = (m) => m.replace(/%/g, '%25').replace(/\r?\n/g, '%0A')
+
 export function warn(message) {
-  console.log(inCI ? `::warning title=Bloglide::${message}` : `[bloglide] ${message}`)
+  console.log(inCI ? `\n::warning title=Bloglide::${encode(message)}` : `[bloglide] ${message}`)
 }
 
 export function fail(message) {
-  console.log(inCI ? `::error title=Bloglide::${message}` : `[bloglide] ERROR ${message}`)
+  console.log(inCI ? `\n::error title=Bloglide::${encode(message)}` : `[bloglide] ERROR ${message}`)
   process.exit(1)
 }
 

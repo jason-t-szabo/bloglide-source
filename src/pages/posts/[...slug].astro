@@ -11,19 +11,6 @@ import TopicChip from '../../components/TopicChip.astro'
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog')
-
-  const seen = new Map<string, string>()
-  for (const post of posts) {
-    const prior = seen.get(post.id)
-    if (prior) {
-      throw new Error(
-        `Two files produce the URL /posts/${post.id}/: ` +
-          `"${prior}" and "${post.filePath}". Rename one.`
-      )
-    }
-    seen.set(post.id, post.filePath ?? post.id)
-  }
-
   return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
 }
 
