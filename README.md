@@ -361,7 +361,7 @@ salt. See `bloglide-cli/README.md` for recovery and rotation.
 | 1. Public posts, pipeline, Tailwind, config layer    | done        |
 | 2. Content tagging                                   | done        |
 | 3. Obsidian vault + Git                              | done        |
-| 4. RSS, styling, accessibility, error handling, docs | in progress |
+| 4. RSS, styling, accessibility, error handling, docs | done        |
 | 5. Private posts                                     | not started |
 | 6. Friends posts                                     | not started |
 | 7. Comments and replies                              | not started |
