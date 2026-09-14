@@ -356,16 +356,17 @@ salt. See `bloglide-cli/README.md` for recovery and rotation.
 
 ## Roadmap
 
-| Stage | Status |
-| --- | --- |
-| 1. Public posts, pipeline, Tailwind, config layer | done |
-| 2. Content tagging | done |
-| 3. Obsidian vault + Git | done |
-| 4. RSS, styling, accessibility, error handling, docs, clone trial | in progress |
-| 5. Private posts | not started |
-| 6. Friends posts | not started |
-| 7. Comments and replies | not started |
-| 8. Theming | not started |
+| Stage                                                | Status      |
+| ---------------------------------------------------- | ----------- |
+| 1. Public posts, pipeline, Tailwind, config layer    | done        |
+| 2. Content tagging                                   | done        |
+| 3. Obsidian vault + Git                              | done        |
+| 4. RSS, styling, accessibility, error handling, docs | in progress |
+| 5. Private posts                                     | not started |
+| 6. Friends posts                                     | not started |
+| 7. Comments and replies                              | not started |
+| 8. Theming                                           | not started |
+| 9. Clone trial                                       | not started |
 
 ### Decisions already made for later stages
 
